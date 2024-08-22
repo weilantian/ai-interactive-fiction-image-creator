@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package generateImage;
+
+import "google/protobuf/empty.proto";
+
+enum ImageGenerationStatus {
+  PENDING = 0;
+  GENERATING = 1;
+  GENERATED = 2;
+  FAILED = 3;
+}
+
+service GenerateImage {
+    rpc CanGenerate (google.protobuf.Empty)  returns (CanGenerateResponse);
+    rpc GenerateImage (GenerateImageRequest) returns (GenerateImageRequestResponse);
+    rpc CheckGenerationStatus (CheckGenerationStatusRequest) returns (CheckGenerationStatusResponse);
+    rpc RetrieveGeneratedImage (RetrieveGenerateImageRequest) returns (RetrieveGeneratedImageResponse);
+}
+
+message CanGenerateResponse {
+  bool canGenerate = 1;
+}
+
+message GenerateImageRequest {
+  string prompt = 1;
+}
+
+message GenerateImageRequestResponse {
+  ImageGenerationStatus status = 1;
+  string taskId = 2;
+  string errorMsg = 3;
+}
+
+message CheckGenerationStatusRequest {
+  string taskId = 1;
+}
+
+message CheckGenerationStatusResponse {
+  string taskId = 1;
+  ImageGenerationStatus status = 2;
+  string errorMsg = 3;
+}
+
+message RetrieveGenerateImageRequest {
+  string taskId = 1;
+}
+
+message RetrieveGeneratedImageResponse {
+  string taskId = 1;
+  string imgUrl = 2;
+  bool success = 3;
+  string errorMsg = 4;
+}
